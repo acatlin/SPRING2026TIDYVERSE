@@ -29,7 +29,8 @@ grocery_inflation <- read_csv(
 glimpse(grocery_inflation)
 
 ```
-Next, we use `select` within `dplyr` to select specific columns of interest. For this vignette, we will focus on the price of milk in target cities such as `New York`, `Los Angeles`, `London`, `Paris`, `Beijing`, and `Tokyo`.  In order to do this, we use `filter` for `Item` that is equal to `Milk (1 Liter)` and for `City` that are in the `target_cities` variable.
+
+Next, we use `select` within `dplyr` to select specific columns of interest. For this vignette, we will focus on the price of milk in target cities such as `New York`, `Los Angeles`, `London`, `Paris`, `Beijing`, and `Tokyo`. In order to do this, we use `filter` for `Item` that is equal to `Milk (1 Liter)` and for `City` that are in the `target_cities` variable.
 
 ```{r}
 target_cities <- c("New York", "Los Angeles", "London", "Paris", "Beijing", "Tokyo")
@@ -41,6 +42,7 @@ milk_inflation <- grocery_inflation %>%
 
 head(milk_inflation)
 ```
+
 Here, we use `summarize` to create a new column named `Average_YoY` to grab the average of all the months for each city.
 
 ```{r}
@@ -52,6 +54,7 @@ milk_inflation_group <- milk_inflation %>%
 
 head(milk_inflation_group)
 ```
+
 In order to visualize the data, we use `ggplot2` to create a bar chart to display the results.
 
 ```{r}
@@ -73,5 +76,119 @@ ggplot(milk_inflation_group, aes(x = reorder(City, Average_YoY),
   ) +
   theme_minimal()
 ```
+
 ## Conclusion
-Tidyverse is a very powerful tool for managing and transforming data.  It allows you to create easy to read charts created from a data source of your choice.  In this example, packages such as `dplyr` and `ggplot2`, made it very easy to manipulate the data and display the results.
+
+Tidyverse is a very powerful tool for managing and transforming data. It allows you to create easy to read charts created from a data source of your choice. In this example, packages such as `dplyr` and `ggplot2`, made it very easy to manipulate the data and display the results.
+
+### Tidyverse extend
+
+Let's use lubridate and create a time plot of grocery prices.
+
+```{r}
+nyc <- grocery_inflation |> filter(City == "New York")
+
+#convert the column to year/month (YM)
+nyc <- nyc %>%
+  mutate(Month = ym(Month))
+```
+
+### Creating a time plot
+
+```{r}
+#use geom_line + geom_point to include both lines and points
+nyc |> ggplot(aes(x = Month, y = Price_USD, color = Item)) +
+  geom_line() +
+  geom_point(shape = 5) + #changing the shape of the point with "shape = 5"
+  labs(title = "Grocery Prices Over a Six-Month Period", x = "Month (2025-2026)",
+       y = "Price in USD") + 
+  theme_minimal() #changing the background
+```
+
+### Mapping prices
+
+ggplot has a mapping feature. However, you need coordinates, not just city names. We can use the maps package to join coordinates to the city name.
+
+```{r}
+library(maps)
+
+data(us.cities)
+
+#each city ends in the state, so to join we need to delete 3 characters on the end 
+#of each city
+us.cities$name <- str_sub(us.cities$name, end = -4)
+
+#filter for only cities in the USA, eggs only
+
+grocery_us <- grocery_inflation |> 
+  filter(ISO_Country_Code == "USA") |> 
+  filter(Item_Key == "Eggs_12") |> 
+  filter(Month_Name == "March 2026")
+
+#left join
+cities_joined <- left_join(grocery_us, us.cities, join_by(City == name))
+
+
+
+```
+
+Plotting a map using the SF package:
+
+```{r}
+library(sf)
+
+#use the SF Package to classify the coordinates
+states_sf <- st_as_sf(maps::map("state", plot = FALSE, fill = TRUE))
+
+cities_sf <- cities_joined |> 
+  drop_na(long, lat) |> 
+  st_as_sf(coords = c("long", "lat"), crs = 4326)
+
+
+ggplot() +
+    geom_sf(data = states_sf, fill = "pink", color = "orange") +
+    geom_sf(data = cities_sf, aes(color = Price_USD), size = 8) + 
+    theme_void() + 
+    labs(color = "Egg Price in Dollars")
+
+```
+
+### Histogram of egg prices in March 2025 across the world
+
+Are they normally distributed?
+
+```{r}
+grocery_inflation |> 
+  filter(Item_Key == "Eggs_12") |> 
+  filter(Month_Name == "March 2026") |>
+  ggplot(aes(x = Price_USD)) +
+  #specify binwidth or bins (or leave it blank and let ggpplot pick)
+  geom_histogram(bins = 40)
+
+
+#breakfast basket (price of a whole breakfast?), with different regions in different colors
+
+grocery_inflation |> 
+  filter(Item_Key == "Eggs_12") |> 
+  filter(Month_Name == "March 2026") |>
+  ggplot(aes(x = Breakfast_Basket_USD, fill = Region)) +
+  geom_histogram() +
+  theme(legend.position = "none")
+```
+
+### Scatterplots
+
+Plotting the population against the price of eggs
+
+```{r}
+
+grocery_inflation |> 
+  mutate(pop_est_mils = Population_Estimate/1000000) |>
+  filter(Item_Key == "Eggs_12") |> 
+  filter(Month_Name == "March 2026") |>
+  ggplot(aes(x = pop_est_mils, y = Price_USD, color = Country)) +
+  geom_point(shape = 3) + 
+  theme(legend.position = "none") +
+  labs(title = "Population vs. Egg Price", x = "City Population in Millions", y = "Egg Price in USD")
+
+```

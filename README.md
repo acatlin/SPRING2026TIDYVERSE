@@ -144,9 +144,9 @@ o	Blood Pressure Category per Region
 Revision/Addition Description and Link:
 
 # Desiree T
-Initial Description and Link:
+Initial Description and Link: This vignette covers the dataset edible-plant-database. It is a vignette that covers Dplyr and includes the use of several functions. GitHub RAW link for dataset: "https://raw.githubusercontent.com/nrennie/data/refs/heads/main/edible-plant-database/edible_plants.csv"
 
-Revision/Addition Description and Link:
+Revision/Addition Description and Link: 
 
 # Dylan G
 Initial Description and Link: 

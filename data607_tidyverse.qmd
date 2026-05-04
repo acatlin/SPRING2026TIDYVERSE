@@ -127,3 +127,23 @@ nyc_clean %>%
 ```
 
 This shows that the crime levels remained relatively stable throughout 2023 with a noticeable dip early in the year followed by higher and more consistent activity during the middle months. This suggests a possible seasonal pattern where crime increases during late spring and summer before leveling off toward the end of the year.
+
+
+## Extension by Ciara Bonnett: Budget Impacy Analysis
+# Does a higher budget correlate with passing the Bechdel Test?
+# We will use ggplot2 to visualize the distribution of budgets for Pass vs. Fail.
+
+library(scales) # for better currency formatting
+
+bechdel_budget <- bechdel %>%
+  filter(!is.na(budget_2013))
+
+ggplot(bechdel_budget, aes(x = binary, y = budget_2013, fill = binary)) + 
+  geom_boxplot(outlier.alpha = 0.5) +
+  scale_y_log10(labels = dollar_format()) +
+  theme_minimal() + 
+  labs(title = "Movie Budgets and the Bechdel Test",
+      subtitle = "Extended Analysis by Ciara Bonnett", 
+      x = "Bechdel Result", 
+      y = "Budget (2013 Dollars, Log Scale)",
+      fill = "Result")

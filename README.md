@@ -229,6 +229,8 @@ Guibril Ramde added AI_Job_Market_Trends_2026.csv file and qmd file: https://git
 
 Revision/Addition Description and Link: https://www.kaggle.com/datasets/sohaibdevv/ai-and-data-science-job-market-2025-2026
 
+Extended Theresa Benny’s burnout vignette by adding sleep-group analysis, study-hour summaries, and new visualizations.
+
 # Ha Kyoung K
 Initial Description and Link:
 

@@ -217,7 +217,7 @@ This extension demonstrates how tidyverse tools can be used to move beyond basic
 # Emily E
 Initial Description and Link: Dplyr, Ggplot2 and Stringr used with movie data from 1970 - 2013. Analyzes whether movies passed or failed the Bechdel Test. Data is from the fivethirtyeight R library. [Vignette](emily_el_mouaquite_tidyverse_create.Rmd)
 
-Revision/Addition Description and Link:
+Revision/Addition Description and Link: Extended Zihao's Iris Vignette by adding a bar chart using Ggplot and ordering it using Forcats. [Extension](zihao_iris_vignette_extended_emily.Rmd)
 
 # Fraz A
 Initial Description and Link:

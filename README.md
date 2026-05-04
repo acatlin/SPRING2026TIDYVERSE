@@ -544,3 +544,6 @@ File: tamnatz_airline_vignette_extension.R
 #Samanthabarbaro
 Initial Description and Link: stringr demo, https://github.com/acatlin/SPRING2026TIDYVERSE/pull/11/changes/f0e79af7598a1bcb2ee17b27ca286814918d8bfa
 
+
+#Radzhana Rabdanova
+  (https://github.com/radzhanarabdanova-dotcom): Extended the Mental Health dataset example with TidyVerse cleaning and ggplot2 visualization.
